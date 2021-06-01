@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Make sure your page supports utf-8 characterset. -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Load TensorFlow.js. This is required to use the qna model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <!-- Load the qna model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/qna"> </script>
+
+    <title>Text Answers</title>
+    <style>
+        body {
+        background-color: rgb(231, 232, 236);
+        margin: 0 ;
+    }
+
+    textarea{
+        width:70% ;
+        height: 500px;
+        
+    
+        box-shadow: inset 2px 2px 2px 0px #d4d6f0;
+         resize: none;
+
+    }
+
+    .q{
+            /* Background color */
+            background-color: #ddd;
+
+            /* Stick to the left */
+            left: 0;
+            position: sticky;
+
+            /* Displayed on top of other rows when scrolling */
+            z-index: 9999;
+    }
+
+    table{
+        padding: 10px;
+        border: 2px solid rgb(19, 18, 18) ;
+        width: 90%;
+    }
+    h1 {
+        margin-top: 0;
+        padding: 10px;
+        overflow: hidden;
+        background-color: rgb(181, 185, 219);
+        color: white;
+        font-family: "Montserrat", sans-serif;
+        text-shadow: rgb(61, 59, 59) 2px 4px 5px;
+        }
+
+
+    .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(181, 185, 219);
+    
+    color: white;
+    text-align: center;
+    }
+
+    a{
+        color: black;
+    }
+    #submit{
+        
+        box-shadow: inset 1px 1px 1px rgb(243, 243, 247);
+        height: 30px;
+        width: 60px;
+        align-items: center;
+        padding: 0 12px 0 12px;
+        background-color: rgb(181, 185, 219);
+        color: white;
+        text-shadow: rgb(180, 180, 182) 2px 3px 4px;
+
+    }
+    #question{
+      
+        height: 27px;
+        color: inherit;
+        width: 50%;
+        font-family: inherit;
+        border-radius: 0.4rem;
+
+    }
+    h4{
+        text-decoration: underline;
+    }
+    </style>
+</head>
+<body>
+    <center>
+        <h1 > Text Answers AI </h1>
+        <div  class='one-edge-shadow'>
+            <textarea id='passage' placeholder='put your text here..'></textarea>
+        </div>
+        <br>
+        <div >
+            <input type='text' id='question' placeholder='Ask a question from the text'></input>
+            <input type='submit' id='submit' value='Go!' />
+        </div>
+        <br><br>
+        <b><h4>Answers:</h4></b>
+        <table id='result'>
+           
+        </table>
+
+
+    </center>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="footer">
+        <p>created by <a href="https://github.com/Soufiane-Majdar">Soufiane</a> - using <a href="https://www.tensorflow.org/">tensorflow</a> </p>
+    </div>
+
+	<script>
+
+		const predict = async () => {
+            
+		  model = await qna.load();
+
+		  document.getElementById('submit')
+			  .addEventListener('click', (e) => {
+                
+
+				const passage = document.getElementById('passage').value;
+				const question = document.getElementById('question').value;
+				model.findAnswers(question, passage).then(answers => {
+				  console.log('Answers: ', answers);
+				  document.getElementById('result').innerHTML +="<tr><td class='q'><b>"+question+" : </b></td><td>"+answers[0].text+"</td></tr> <tr><td><br><hr><br></td><td><hr></td></tr>";
+				});
+
+				// Prevent submitting the form which would cause a page reload.
+				e.preventDefault();
+			  });
+		};
+
+	predict();
+	</script>
+</body>
+</html>
